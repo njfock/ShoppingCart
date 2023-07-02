@@ -90,14 +90,14 @@ const Products = (props) => {
   } = ReactBootstrap;
   //  Fetch Data
   const { Fragment, useState, useEffect, useReducer } = React;
-  const [query, setQuery] = useState("http://localhost:1337/products");
+  const [query, setQuery] = useState("api/products");
   const [{ data, isLoading, isError }, doFetch] = useDataApi(
-    "http://localhost:1337/products",
+    "http://localhost:1337/api/products",
     {
       data: [],
     }
   );
-  console.log(`Rendering Products ${JSON.stringify(data)}`);
+  console.log(`Rendering Products ${JSON.stringify(data.data)}`);
   // Fetch Data
   const addToCart = (e) => {
     let name = e.target.name;
@@ -160,7 +160,18 @@ const Products = (props) => {
     return newTotal;
   };
   // TODO: implement the restockProducts function
-  const restockProducts = (url) => {};
+  const restockProducts = (url) => {
+    console.log('restockProducts url', url)
+    doFetch(url);
+    let newItems = data.data.map((item) => {
+      console.log('item', item)
+      let { attributes } = item;
+      let { name, country, cost, instock } = attributes;
+      return { name, country, cost, instock };
+    });
+    console.log('newItems', newItems)
+    setItems([...items, ...newItems]);
+  };
 
   return (
     <Container>
